@@ -1,0 +1,13 @@
+{
+  "name": "awstools",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "awsdev",
+  "extensions": [
+    "amazonwebservices.aws-toolkit-vscode",
+    "ms-azuretools.vscode-docker"
+  ],
+  "shutdownAction": "stopCompose",
+  "remoteUser": "vscode",
+  "workspaceFolder": "${localWorkspaceFolder}",
+  "postCreateCommand": "sudo chmod 777 /var/run/docker.sock && sudo npm i -g aws-cdk"
+}

@@ -1,0 +1,25 @@
+version: "3"
+services:
+  awsdev:
+    build:
+      context: .
+      args:
+        VARIANT: 3
+        COPILOT_VERSION: v1.13.0
+    volumes:
+      - ..:/$PWD
+      - ${HOME}/.ssh:/home/vscode/.ssh
+      - ${HOME}/.aws:/home/vscode/.aws
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    networks:
+      - devnet
+  step-functions-local:
+    image: amazon/aws-stepfunctions-local
+    env_file:
+      - aws-stepfunctions-local-credentials.txt
+    networks:
+      - devnet
+networks:
+  devnet:
+    driver: bridge
