@@ -12,14 +12,3 @@ services:
       - ${HOME}/.aws:/home/vscode/.aws
       - /var/run/docker.sock:/var/run/docker.sock
     command: /bin/sh -c "while sleep 1000; do :; done"
-    networks:
-      - devnet
-  step-functions-local:
-    image: amazon/aws-stepfunctions-local
-    env_file:
-      - aws-stepfunctions-local-credentials.txt
-    networks:
-      - devnet
-networks:
-  devnet:
-    driver: bridge
