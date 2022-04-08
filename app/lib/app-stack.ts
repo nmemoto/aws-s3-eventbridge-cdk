@@ -1,6 +1,6 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 
-import { Bucket, CfnBucket } from 'aws-cdk-lib/aws-s3';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { EventField, Rule, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as cdk from 'aws-cdk-lib';
@@ -12,19 +12,9 @@ export class AppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // // S3 バケット作成(2.8.0だとできなかった)
-    // const bucket = new Bucket(this, `${this.stackName}-Bucket`, {
-    //   eventBridgeEnabled: true
-    // })
-
-    // S3 バケット作成
-    const bucket = new CfnBucket(this, `${this.stackName}-Bucket`,{
-      bucketName: `s3-eventbridge-test-bucket`,
-      notificationConfiguration: {
-        eventBridgeConfiguration: {
-          eventBridgeEnabled: true
-        }
-      },
+    // S3 バケット作成(v2.7.0やv2.8.0だとできなかったのが、v2.20.0でできるようになった)
+    const bucket = new Bucket(this, `${this.stackName}-Bucket`, {
+      eventBridgeEnabled: true
     })
 
     // Lambda Function 作成
@@ -48,7 +38,7 @@ export class AppStack extends Stack {
       eventPattern: {
         "source": ["aws.s3"],
         "detailType": ["Object Created"],
-        "resources": [bucket.attrArn]
+        "resources": [bucket.bucketArn]
       },
       targets: [new LambdaFunction(fn, {
         event: RuleTargetInput.fromObject({
